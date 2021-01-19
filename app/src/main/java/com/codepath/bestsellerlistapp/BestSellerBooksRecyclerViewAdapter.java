@@ -1,10 +1,14 @@
 package com.codepath.bestsellerlistapp;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -35,12 +39,16 @@ public class BestSellerBooksRecyclerViewAdapter extends RecyclerView.Adapter<Bes
     }
 
     @Override
-    public void onBindViewHolder(final BookViewHolder holder, int position) {
+    public void onBindViewHolder(final BookViewHolder holder, final int position) {
         holder.mItem = books.get(position);
         holder.mBookTitle.setText(books.get(position).title);
         holder.mBookAuthor.setText(books.get(position).author);
-        holder.mRanking.setText(books.get(position).rank);
+        String ranking = String.format("%d", books.get(position).rank);
+        holder.mRanking.setText(ranking);
+        holder.mBookDescription.setText(books.get(position).description);
+
         Glide.with(holder.mView).load(books.get(position).bookImageUrl).into(holder.mBookImage);
+        final String url = books.get(position).amazonUrl;
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -49,9 +57,20 @@ public class BestSellerBooksRecyclerViewAdapter extends RecyclerView.Adapter<Bes
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
                     mListener.onItemClick(holder.mItem);
+                    Toast.makeText(v.getContext(), "Clicked", Toast.LENGTH_SHORT).show();
                 }
             }
         });
+
+        holder.mBuyButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Uri uri = Uri.parse(url);
+                Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                view.getContext().startActivity(intent);
+            }
+        });
+
     }
 
     @Override
@@ -65,6 +84,8 @@ public class BestSellerBooksRecyclerViewAdapter extends RecyclerView.Adapter<Bes
         public final TextView mBookAuthor;
         public final TextView mRanking;
         public final ImageView mBookImage;
+        public final TextView mBookDescription;
+        public final Button mBuyButton;
         public BestSellerBook mItem;
 
         public BookViewHolder(View view) {
@@ -74,6 +95,8 @@ public class BestSellerBooksRecyclerViewAdapter extends RecyclerView.Adapter<Bes
             mBookAuthor = (TextView) view.findViewById(R.id.book_author);
             mRanking = (TextView) view.findViewById(R.id.ranking);
             mBookImage = (ImageView) view.findViewById(R.id.book_image);
+            mBookDescription = (TextView) view.findViewById(R.id.book_description);
+            mBuyButton = (Button) view.findViewById(R.id.buy_button);
         }
 
         @Override
