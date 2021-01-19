@@ -47,7 +47,7 @@ public class BestSellerBooksRecyclerViewAdapter extends RecyclerView.Adapter<Bes
         holder.mRanking.setText(ranking);
         holder.mBookDescription.setText(books.get(position).description);
 
-        Glide.with(holder.mView).load(books.get(position).bookImageUrl).into(holder.mBookImage);
+        Glide.with(holder.mView).load(books.get(position).bookImageUrl).fitCenter().into(holder.mBookImage);
         final String url = books.get(position).amazonUrl;
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
